@@ -13,4 +13,8 @@
     <ProjectReference Include="..\Heroes.ReplayParser\Heroes.ReplayParser\Heroes.ReplayParser.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="parser.sh" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
