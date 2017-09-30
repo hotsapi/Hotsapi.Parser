@@ -10,7 +10,7 @@ addons:
   artifacts:
     s3_region: "eu-west-1"
     bucket: poma
-    target_paths: Hotsapi.Parser/$TRAVIS_BUILD_NUMBER:Hotsapi.Parser/latest
+    target_paths: Hotsapi.Parser/$TRAVIS_BRANCH$TRAVIS_PULL_REQUEST_BRANCH/$TRAVIS_JOB_NUMBER:Hotsapi.Parser/$TRAVIS_BRANCH$TRAVIS_PULL_REQUEST_BRANCH/latest
     paths:
       - parser.tar.gz
 
