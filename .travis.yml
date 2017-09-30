@@ -1,0 +1,27 @@
+language: csharp
+solution: Hotsapi.Parser.sln
+mono: none
+dotnet: 2.0.0
+script:
+- dotnet publish --configuration=Release
+- tar -czf parser.tar.gz -C Hotsapi.Parser/bin/Release/netcoreapp2.0/publish .
+
+addons:
+  artifacts:
+    s3_region: "eu-west-1"
+    bucket: poma
+    target_paths: Hotsapi.Parser/$TRAVIS_BUILD_NUMBER:Hotsapi.Parser/latest
+    paths:
+      - parser.tar.gz
+
+cache:
+  directories:
+    - $HOME/.nuget
+
+notifications:
+  webhooks:
+    urls:
+      - https://webhooks.gitter.im/e/c482c7090006b3067e20
+    on_success: change
+    on_failure: always
+    on_start: never
