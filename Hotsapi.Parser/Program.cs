@@ -17,19 +17,17 @@ namespace Hotsapi.Parser
         public static int Main(string[] args)
         {
             try {
-                if (!Debug) {
-                    if (args.Length == 0) {
+                if (args.Length == 0) {
+                    if (Debug) {
+                        args = new string[] { @"V:\Development\heroprotocol\bd1449e2-4687-06f8-7761-8b2a4b3ed3df.StormReplay" };
+                    } else {
                         Console.Error.WriteLine("Specify replay file to parse");
                         return 1;
                     }
-                    if (!File.Exists(args[0])) {
-                        Console.Error.WriteLine($"File '{args[0]}' does not exist");
-                        return 1;
-                    }                    
-                } else {
-                    if (args.Length == 0) {
-                        args = new string[] { @"V:\Development\heroprotocol\bd1449e2-4687-06f8-7761-8b2a4b3ed3df.StormReplay" };
-                    }
+                }            
+                if (!File.Exists(args[0])) {
+                    Console.Error.WriteLine($"File '{args[0]}' does not exist");
+                    return 1;
                 }
                 var result = DataParser.ParseReplay(args[0], false, false);
                 if (result.Item1 != DataParser.ReplayParseResult.Success || result.Item2 == null) {
