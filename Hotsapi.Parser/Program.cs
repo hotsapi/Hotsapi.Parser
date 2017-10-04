@@ -29,7 +29,7 @@ namespace Hotsapi.Parser
                     Console.Error.WriteLine($"File '{args[0]}' does not exist");
                     return 1;
                 }
-                var result = DataParser.ParseReplay(args[0], false, false);
+                var result = DataParser.ParseReplay(args[0], false, false, skipUnitParsing: true, skipMouseMoveEvents: true);
                 if (result.Item1 != DataParser.ReplayParseResult.Success || result.Item2 == null) {
                     Console.Error.WriteLine($"Error parsing replay: {result.Item1}");
                     return 1;
