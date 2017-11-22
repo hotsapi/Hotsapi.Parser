@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26730.16
+VisualStudioVersion = 15.0.27004.2009
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hotsapi.Parser", "Hotsapi.Parser\Hotsapi.Parser.csproj", "{F7F5BF71-F743-4B3D-AAAD-F728643E56DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hotsapi.Parser", "Hotsapi.Parser\Hotsapi.Parser.csproj", "{F7F5BF71-F743-4B3D-AAAD-F728643E56DA}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heroes.ReplayParser", "Heroes.ReplayParser\Heroes.ReplayParser\Heroes.ReplayParser.csproj", "{B57C14B6-FCAF-45A3-B85A-3D461D97C507}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Heroes.ReplayParser.netstandard", "Heroes.ReplayParser\Heroes.ReplayParser\Heroes.ReplayParser.netstandard.csproj", "{C1B434E1-E7A9-4A92-94F4-DBBD4FD79988}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MpqTool", "Heroes.ReplayParser\MpqTool\MpqTool.csproj", "{D12EBAEF-F8FF-4830-9AE2-99EB014EE2E7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MpqTool.netstandard", "Heroes.ReplayParser\MpqTool\MpqTool.netstandard.csproj", "{0B70C187-D808-4033-A4F2-A2BE9D3097DB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +19,14 @@ Global
 		{F7F5BF71-F743-4B3D-AAAD-F728643E56DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7F5BF71-F743-4B3D-AAAD-F728643E56DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7F5BF71-F743-4B3D-AAAD-F728643E56DA}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B57C14B6-FCAF-45A3-B85A-3D461D97C507}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B57C14B6-FCAF-45A3-B85A-3D461D97C507}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B57C14B6-FCAF-45A3-B85A-3D461D97C507}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B57C14B6-FCAF-45A3-B85A-3D461D97C507}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D12EBAEF-F8FF-4830-9AE2-99EB014EE2E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D12EBAEF-F8FF-4830-9AE2-99EB014EE2E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D12EBAEF-F8FF-4830-9AE2-99EB014EE2E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D12EBAEF-F8FF-4830-9AE2-99EB014EE2E7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1B434E1-E7A9-4A92-94F4-DBBD4FD79988}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1B434E1-E7A9-4A92-94F4-DBBD4FD79988}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1B434E1-E7A9-4A92-94F4-DBBD4FD79988}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1B434E1-E7A9-4A92-94F4-DBBD4FD79988}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0B70C187-D808-4033-A4F2-A2BE9D3097DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B70C187-D808-4033-A4F2-A2BE9D3097DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B70C187-D808-4033-A4F2-A2BE9D3097DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B70C187-D808-4033-A4F2-A2BE9D3097DB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
