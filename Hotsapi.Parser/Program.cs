@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace Hotsapi.Parser
 {
-    public class Program
+    public static class Program
     {
 #if DEBUG
         const bool Debug = true;
@@ -18,12 +18,8 @@ namespace Hotsapi.Parser
         {
             try {
                 if (args.Length == 0) {
-                    if (Debug) {
-                        args = new string[] { @"V:\Development\heroprotocol\bd1449e2-4687-06f8-7761-8b2a4b3ed3df.StormReplay" };
-                    } else {
-                        Console.Error.WriteLine("Specify replay file to parse");
-                        return 1;
-                    }
+                    Console.Error.WriteLine("Specify replay file to parse");
+                    return 1;
                 }            
                 if (!File.Exists(args[0])) {
                     Console.Error.WriteLine($"File '{args[0]}' does not exist");
@@ -43,8 +39,9 @@ namespace Hotsapi.Parser
             }
         }
 
-        public static string ToJson(Replay replay)
+        private static string ToJson(Replay replay)
         {
+            var xp = replay.TeamPeriodicXPBreakdown.Select((x, i) => x.Last()).ToList();
             var obj = new {
                 mode = replay.GameMode.ToString(),
                 date = replay.Timestamp,
@@ -52,7 +49,18 @@ namespace Hotsapi.Parser
                 map = replay.Map,
                 version = replay.ReplayVersion,
                 bans = replay.TeamHeroBans,
-                players = from p in replay.Players
+                teams = Enumerable.Range(0, 2).Select(i => new {
+                    index = i,
+                    winner = i == replay.GetWinnerTeam(),
+                    xp[i].TeamLevel,
+                    xp[i].CreepXP,
+                    xp[i].HeroXP,
+                    xp[i].MinionXP,
+                    xp[i].StructureXP,
+                    xp[i].TrickleXP,
+                    xp[i].TotalXP
+                }),
+                players = from p in replay.GetPlayerInPickOrder()
                           select new {
                               battletag_name = p.Name,
                               battletag_id = p.BattleTag,
@@ -68,6 +76,21 @@ namespace Hotsapi.Parser
                 }
             };
             return JObject.FromObject(obj).ToString(Debug ? Formatting.Indented : Formatting.None);
+        }
+
+        public static int GetWinnerTeam(this Replay replay)
+        {
+            return replay.Players.First(p => p.IsWinner).Team;
+        }
+
+        public static Player[] GetPlayerInPickOrder(this Replay replay)
+        {
+            return replay.DraftOrder.Count < 10 ? 
+                replay.Players : 
+                replay.DraftOrder
+                    .Where(x => x.PickType == DraftPickType.Picked)
+                    .Select(x => replay.Players[x.SelectedPlayerSlotId])
+                    .ToArray();   
         }
     }
 }
