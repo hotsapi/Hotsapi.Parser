@@ -41,7 +41,6 @@ namespace Hotsapi.Parser
 
         private static string ToJson(Replay replay)
         {
-            var xp = replay.TeamPeriodicXPBreakdown.Select((x, i) => x.Last()).ToList();
             var obj = new {
                 mode = replay.GameMode.ToString(),
                 date = replay.Timestamp,
@@ -49,16 +48,15 @@ namespace Hotsapi.Parser
                 map = replay.Map,
                 version = replay.ReplayVersion,
                 bans = replay.TeamHeroBans,
-                teams = Enumerable.Range(0, 2).Select(i => new {
-                    index = i,
+                teams = replay.TeamPeriodicXPBreakdown.Select(x => x.Last()).Select((xp, i) => new {
                     winner = i == replay.GetWinnerTeam(),
-                    xp[i].TeamLevel,
-                    xp[i].CreepXP,
-                    xp[i].HeroXP,
-                    xp[i].MinionXP,
-                    xp[i].StructureXP,
-                    xp[i].TrickleXP,
-                    xp[i].TotalXP
+                    xp.TeamLevel,
+                    xp.CreepXP,
+                    xp.HeroXP,
+                    xp.MinionXP,
+                    xp.StructureXP,
+                    xp.TrickleXP,
+                    xp.TotalXP
                 }),
                 players = from p in replay.GetPlayerInPickOrder()
                           select new {
