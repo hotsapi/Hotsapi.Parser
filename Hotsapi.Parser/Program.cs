@@ -58,20 +58,19 @@ namespace Hotsapi.Parser
                     xp.TrickleXP,
                     xp.TotalXP
                 }),
-                players = from p in replay.GetPlayerInPickOrder()
-                          select new {
-                              battletag_name = p.Name,
-                              battletag_id = p.BattleTag,
-                              blizz_id = p.BattleNetId,
-                              hero = p.Character,
-                              hero_level = p.CharacterLevel,
-                              team = p.Team,
-                              winner = p.IsWinner,
-                              silenced = p.IsSilenced,
-                              party = p.PartyValue,
-                              talents = p.Talents.Select(t => t.TalentName),
-                              score = p.ScoreResult
-                }
+                players = replay.GetPlayerInPickOrder().Select(p => new {
+                    battletag_name = p.Name,
+                    battletag_id = p.BattleTag,
+                    blizz_id = p.BattleNetId,
+                    hero = p.Character,
+                    hero_level = p.CharacterLevel,
+                    team = p.Team,
+                    winner = p.IsWinner,
+                    silenced = p.IsSilenced,
+                    party = p.PartyValue,
+                    talents = p.Talents.Select(t => t.TalentName),
+                    score = p.ScoreResult
+                })
             };
             return JObject.FromObject(obj).ToString(Debug ? Formatting.Indented : Formatting.None);
         }
