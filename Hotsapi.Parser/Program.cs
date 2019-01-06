@@ -49,7 +49,8 @@ namespace Hotsapi.Parser
                 version = replay.ReplayVersion,
                 bans = replay.TeamHeroBans,
                 teams = replay.TeamPeriodicXPBreakdown.Select(x => x.Last()).Select((xp, i) => new {
-                    winner = i == replay.GetWinnerTeam(),
+                    Winner = i == replay.GetWinnerTeam(),
+                    FirstPick = i == replay.GetFirstPickTeam(),
                     xp.TeamLevel,
                     xp.CreepXP,
                     xp.HeroXP,
@@ -78,6 +79,11 @@ namespace Hotsapi.Parser
         public static int GetWinnerTeam(this Replay replay)
         {
             return replay.Players.First(p => p.IsWinner).Team;
+        }
+        
+        public static int GetFirstPickTeam(this Replay replay)
+        {
+            return replay.DraftOrder.Count < 10 ? -1 : replay.Players.First().Team;
         }
 
         public static Player[] GetPlayerInPickOrder(this Replay replay)
