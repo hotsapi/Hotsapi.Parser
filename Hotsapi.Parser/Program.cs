@@ -30,8 +30,7 @@ namespace Hotsapi.Parser
                 }
 
                 var result = ParseReplay(args[0]);
-                if (result == null)
-                {
+                if (result == null) {
                     return 1;
                 }
                 Console.WriteLine(result);
@@ -46,8 +45,7 @@ namespace Hotsapi.Parser
         internal static string ParseReplay(string fileName)
         {
             var result = DataParser.ParseReplay(fileName, false, false, skipUnitParsing: true, skipMouseMoveEvents: true);
-            if (result.Item1 != DataParser.ReplayParseResult.Success || result.Item2 == null)
-            {
+            if (result.Item1 != DataParser.ReplayParseResult.Success || result.Item2 == null) {
                 Console.Error.WriteLine($"Error parsing replay: {result.Item1}");
                 return null;
             }
