@@ -4,6 +4,9 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("Hotsapi.Parser.Test")]
 
 namespace Hotsapi.Parser
 {
@@ -25,18 +28,28 @@ namespace Hotsapi.Parser
                     Console.Error.WriteLine($"File '{args[0]}' does not exist");
                     return 1;
                 }
-                var result = DataParser.ParseReplay(args[0], false, false, skipUnitParsing: true, skipMouseMoveEvents: true);
-                if (result.Item1 != DataParser.ReplayParseResult.Success || result.Item2 == null) {
-                    Console.Error.WriteLine($"Error parsing replay: {result.Item1}");
+
+                var result = ParseReplay(args[0]);
+                if (result == null) {
                     return 1;
                 }
-                Console.WriteLine(ToJson(result.Item2));
+                Console.WriteLine(result);
                 return 0;
             }
             catch (Exception ex) {
                 Console.Error.WriteLine($"Error parsing replay: {ex}");
                 return 1;
             }
+        }
+
+        internal static string ParseReplay(string fileName)
+        {
+            var result = DataParser.ParseReplay(fileName, false, false, skipUnitParsing: true, skipMouseMoveEvents: true);
+            if (result.Item1 != DataParser.ReplayParseResult.Success || result.Item2 == null) {
+                Console.Error.WriteLine($"Error parsing replay: {result.Item1}");
+                return null;
+            }
+            return ToJson(result.Item2);
         }
 
         private static string ToJson(Replay replay)

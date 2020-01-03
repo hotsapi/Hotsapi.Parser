@@ -3,6 +3,7 @@ solution: Hotsapi.Parser.sln
 mono: none
 dotnet: 2.0.0
 script:
+- dotnet test -c Debug Hotsapi.Parser.Test/Hotsapi.Parser.Test.csproj
 - dotnet publish --configuration=Release
 - tar -czf parser.tar.gz -C Hotsapi.Parser/bin/Release/netcoreapp2.0/publish .
 
