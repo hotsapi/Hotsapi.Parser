@@ -3,80 +3,37 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Text;
 using System.IO;
+using System.Collections.Generic;
 
 namespace Hotsapi.Parser.Test
 {
     [TestClass]
-    public class ProgramTest
+    public class ReplayParseTest
     {
-        private string fixturePath = "";
-
-        [TestInitialize]
-        public void Init()
+        [DataTestMethod]
+        [DynamicData(nameof(GetFileNames), DynamicDataSourceType.Method)]
+        public void TestReplayParsing(string name)
         {
-            fixturePath = Path.Combine(new DirectoryInfo(Environment.CurrentDirectory).Parent.Parent.Parent.FullName, "Fixtures");
-        }
-
-        private void RunTest(string name)
-        {
-            var expected = File.ReadAllText(Path.Combine(fixturePath, $"{name}.json"), Encoding.UTF8).Trim();
-            var actual = Program.ParseReplay(Path.Combine(fixturePath, $"{name}.StormReplay")).Trim();
+            var filePath = Path.Combine(GetFixturePath(), name);
+            var expected = File.ReadAllText($"{filePath}.json", Encoding.UTF8).Trim();
+            var actual = Program.ParseReplay($"{filePath}.StormReplay").Trim();
 
             Assert.AreEqual(expected, actual);
         }
 
-        [TestMethod]
-        public void alterac_quickmatch_2_45_StormReplay_is_parsed_correctly()
+        public static IEnumerable<object[]> GetFileNames()
         {
-            RunTest("alterac_quickmatch_2.45");
+            var fixturePath = GetFixturePath();
+            foreach (var file in Directory.EnumerateFiles(fixturePath)) {
+                if (file.EndsWith(".StormReplay")) {
+                    yield return new object[] { Path.GetFileNameWithoutExtension(file) };
+                }
+            }
         }
 
-        [TestMethod]
-        public void sky_storm_league_2_46_StormReplay_is_parsed_correctly()
+        private static string GetFixturePath()
         {
-            RunTest("sky_storm_league_2.46");
-        }
-
-        [TestMethod]
-        public void infernal_storm_league_2_47_StormReplay_is_parsed_correctly()
-        {
-            RunTest("infernal_storm_league_2.47");
-        }
-
-        [TestMethod]
-        public void blackheart_unranked_2_48_StormReplay_is_parsed_correctly()
-        {
-            RunTest("blackheart_unranked_2.48");
-        }
-
-        [TestMethod]
-        public void dragon_custom_2_48_StormReplay_is_parsed_correctly()
-        {
-            RunTest("dragon_custom_2.48");
-        }
-
-        [TestMethod]
-        public void volskaya_unranked_2_48_StormReplay_is_parsed_correctly()
-        {
-            RunTest("volskaya_unranked_2.48");
-        }
-
-        [TestMethod]
-        public void braxis_storm_league_2_49_StormReplay_is_parsed_correctly()
-        {
-            RunTest("braxis_storm_league_2.49");
-        }
-
-        [TestMethod]
-        public void dragon_quickmatch_2_49_StormReplay_is_parsed_correctly()
-        {
-            RunTest("dragon_quickmatch_2.49");
-        }
-
-        [TestMethod]
-        public void warhead_quickmatch_2_49_StormReplay_is_parsed_correctly()
-        {
-            RunTest("warhead_quickmatch_2.49");
+            return Path.Combine(new DirectoryInfo(Environment.CurrentDirectory).Parent.Parent.Parent.FullName, "Fixtures");
         }
     }
 }
