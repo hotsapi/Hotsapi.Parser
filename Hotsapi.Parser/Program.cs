@@ -123,15 +123,14 @@ namespace Hotsapi.Parser
             while (true) {
                 try {
                     var context = listener.GetContext();
+                    var request = context.Request;
+                    var response = context.Response;
                     ThreadPool.QueueUserWorkItem(o => {
                         try {
-                            var request = context.Request;
-                            var response = context.Response;
-
                             // todo: more strictly validate request filename 
                             if (request.HttpMethod != "GET" || !Regex.Match(request.RawUrl, @"/[\w]+").Success) {
                                 Console.WriteLine("Got invalid request");
-                                response.StatusCode = 401;
+                                response.StatusCode = 400;
                                 response.OutputStream.Close();
                                 return;
                             }
@@ -139,7 +138,7 @@ namespace Hotsapi.Parser
                             var filePath = Path.Combine(PathBase, request.RawUrl.Remove(0, 1));
                             var result = ParseReplay(filePath);
                             if (result == null) {
-                                response.StatusCode = 503;
+                                response.StatusCode = 422;
                                 response.OutputStream.Close();
                                 return;
                             }
@@ -152,6 +151,8 @@ namespace Hotsapi.Parser
                         }
                         catch (Exception e) {
                             Console.WriteLine(e.ToString());
+                            response.StatusCode = 503;
+                            response.OutputStream.Close();
                         }
                     });
                 } 
