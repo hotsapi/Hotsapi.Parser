@@ -16,5 +16,6 @@ FROM mcr.microsoft.com/dotnet/core/runtime-deps:2.2-stretch-slim AS runtime
 RUN apt-get update && apt-get install -y libunwind-dev && rm -rf /var/lib/apt/lists/*
 WORKDIR /app
 COPY --from=build /app/Hotsapi.Parser/out ./
+EXPOSE 8080
 ENTRYPOINT ["./Hotsapi.Parser"]
 
