@@ -136,7 +136,7 @@ namespace Hotsapi.Parser
                                 return;
                             }
 
-                            var filePath = Path.Combine(PathBase, $"{request.RawUrl.Remove(0, 1)}.StormReplay");
+                            var filePath = Path.Combine(PathBase, request.RawUrl.Remove(0, 1));
                             var result = ParseReplay(filePath);
                             if (result == null) {
                                 response.StatusCode = 503;
