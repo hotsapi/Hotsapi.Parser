@@ -1,0 +1,7 @@
+.git
+.idea
+.vs
+ConsoleApp1/
+**/bin/
+**/obj/
+**/*.user

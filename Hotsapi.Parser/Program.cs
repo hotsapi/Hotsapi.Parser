@@ -4,7 +4,10 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
+using System.Threading;
 
 [assembly: InternalsVisibleTo("Hotsapi.Parser.Test")]
 
@@ -17,12 +20,14 @@ namespace Hotsapi.Parser
 #else
         const bool Debug = false;
 #endif
+
+        private const string PathBase = "/tmp";
         public static int Main(string[] args)
         {
             try {
                 if (args.Length == 0) {
-                    Console.Error.WriteLine("Specify replay file to parse");
-                    return 1;
+                    Listen();
+                    return 0;
                 }            
                 if (!File.Exists(args[0])) {
                     Console.Error.WriteLine($"File '{args[0]}' does not exist");
@@ -44,12 +49,12 @@ namespace Hotsapi.Parser
 
         internal static string ParseReplay(string fileName)
         {
-            var result = DataParser.ParseReplay(fileName, false, false, skipUnitParsing: true, skipMouseMoveEvents: true);
-            if (result.Item1 != DataParser.ReplayParseResult.Success || result.Item2 == null) {
-                Console.Error.WriteLine($"Error parsing replay: {result.Item1}");
+            var (replayParseResult, replay) = DataParser.ParseReplay(fileName, false, false, skipUnitParsing: true, skipMouseMoveEvents: true);
+            if (replayParseResult != DataParser.ReplayParseResult.Success || replay == null) {
+                Console.Error.WriteLine($"Error parsing replay: {replayParseResult}");
                 return null;
             }
-            return ToJson(result.Item2);
+            return ToJson(replay);
         }
 
         private static string ToJson(Replay replay)
@@ -107,6 +112,53 @@ namespace Hotsapi.Parser
                     .Where(x => x.PickType == DraftPickType.Picked)
                     .Select(x => replay.Players[x.SelectedPlayerSlotId])
                     .ToArray();   
+        }
+
+        public static void Listen()
+        {
+            var listener = new HttpListener();
+            listener.Prefixes.Add("http://*:8080/");
+            listener.Start();
+            Console.WriteLine("Listening...");
+            while (true) {
+                try {
+                    var context = listener.GetContext();
+                    ThreadPool.QueueUserWorkItem(o => {
+                        try {
+                            var request = context.Request;
+                            var response = context.Response;
+
+                            // todo: more strictly validate request filename 
+                            if (request.HttpMethod != "GET" || !Regex.Match(request.RawUrl, @"/[\w]+").Success) {
+                                Console.WriteLine("Got invalid request");
+                                response.StatusCode = 401;
+                                response.OutputStream.Close();
+                                return;
+                            }
+
+                            var filePath = Path.Combine(PathBase, $"{request.RawUrl.Remove(0, 1)}.StormReplay");
+                            var result = ParseReplay(filePath);
+                            if (result == null) {
+                                response.StatusCode = 503;
+                                response.OutputStream.Close();
+                                return;
+                            }
+                            
+                            var buffer = System.Text.Encoding.UTF8.GetBytes(result);
+                            response.ContentLength64 = buffer.Length;
+                            response.Headers.Add("Content-Type", "application/json");
+                            response.OutputStream.Write(buffer, 0, buffer.Length);
+                            response.OutputStream.Close();
+                        }
+                        catch (Exception e) {
+                            Console.WriteLine(e.ToString());
+                        }
+                    });
+                } 
+                catch (Exception e) {
+                    Console.WriteLine(e.ToString());
+                }
+            }
         }
     }
 }
